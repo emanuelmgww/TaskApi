@@ -3,24 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using TaskApi.Models;
 
 namespace TaskApi.Data
 {
     public class TaskDbContext : DbContext
     {
-        private readonly IConfiguration _configuration;
-
-        public TaskDbContext(IConfiguration configuration)
+        public TaskDbContext(DbContextOptions<TaskDbContext> options) : base(options)
         {
-            _configuration = configuration;
         }
 
-        public DbSet<Task> Tasks { get; set; }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder options)
-        {
-            var connectionString = _configuration.GetConnectionString("DefaultConnection");
-            options.UseSqlServer(connectionString);
-        }
+        public DbSet<TaskModel> Tasks { get; set; }
     }
 }
