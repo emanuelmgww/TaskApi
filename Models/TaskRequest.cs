@@ -5,4 +5,4 @@ using System.Threading.Tasks;
 
 namespace TaskApi.Models;
 
-public record TaskRequest(string descricao);
+public record TaskRequest(string Descricao);
