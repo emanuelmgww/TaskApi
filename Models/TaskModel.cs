@@ -12,6 +12,7 @@ namespace TaskApi.Models
 
         public TaskModel(string descricao)
         {
+            Id = Guid.NewGuid();
             Descricao = descricao;
         }
     }
