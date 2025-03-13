@@ -50,7 +50,7 @@ namespace TaskApi.Routes
             {
                 try
                 {
-                    var task = await context.Tasks.FindAsync();
+                    var task = await context.Tasks.FindAsync(id);
 
                     if (task == null)
                     {
