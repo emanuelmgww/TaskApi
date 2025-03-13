@@ -85,7 +85,7 @@ namespace TaskApi.Routes
                     await context.SaveChangesAsync();
                     return Results.Ok(task);  
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     return Results.StatusCode(StatusCodes.Status500InternalServerError);
                 }
