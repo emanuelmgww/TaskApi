@@ -30,6 +30,10 @@ namespace TaskApi.Routes
                     return Results.Created($"/{task.Id}", task);
                     
                 }
+                catch(DbUpdateException e)
+                {
+                    return Results.BadRequest($"Erro ao criar a tarefa: {e.Message}");
+                }
                 catch (Exception)
                 {   
                     return Results.StatusCode(StatusCodes.Status500InternalServerError);
@@ -55,6 +59,57 @@ namespace TaskApi.Routes
 
                     return Results.Ok(task);
                     
+                }
+                catch (Exception)
+                {
+                    return Results.StatusCode(StatusCodes.Status500InternalServerError);
+                }
+            });
+
+            route.MapPut("{id:guid}", async (Guid id, TaskRequest req, TaskDbContext context) =>
+            {
+                var task = await context.Tasks.FirstOrDefaultAsync(x => x.Id == id);
+
+                if (task == null)
+                {
+                    return Results.NotFound();
+                }
+
+                if (!string.IsNullOrWhiteSpace(req.Descricao))
+                {
+                    task.Descricao = req.Descricao;
+                }
+
+                try
+                {
+                    await context.SaveChangesAsync();
+                    return Results.Ok(task);  
+                }
+                catch (Exception e)
+                {
+                    return Results.StatusCode(StatusCodes.Status500InternalServerError);
+                }
+
+            });
+
+            route.MapDelete("{id:guid}", async (Guid id, TaskDbContext context) => 
+            {
+                var task = await context.Tasks.FirstOrDefaultAsync(x => x.Id == id);
+
+                if (task == null)
+                {
+                    return Results.NotFound();
+                }
+
+                try
+                {
+                    context.Tasks.Remove(task);
+                    await context.SaveChangesAsync();
+                    return Results.NoContent(); 
+                }
+                catch (DbUpdateException e)
+                {
+                    return Results.BadRequest($"Erro ao deletar tarefa: {e.Message}");
                 }
                 catch (Exception)
                 {
