@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using TaskApi.Data;
 using TaskApi.Models;
 
@@ -34,7 +36,31 @@ namespace TaskApi.Routes
                 }
             });
 
-            
+            route.MapGet("", async (TaskDbContext context) => 
+            {
+                var tasks = await context.Tasks.ToListAsync();
+                return Results.Ok(tasks);
+            });
+
+            route.MapGet("{id:guid}", async (Guid id, TaskDbContext context) => 
+            {
+                try
+                {
+                    var task = await context.Tasks.FindAsync();
+
+                    if (task == null)
+                    {
+                        return Results.NotFound();
+                    }
+
+                    return Results.Ok(task);
+                    
+                }
+                catch (Exception)
+                {
+                    return Results.StatusCode(StatusCodes.Status500InternalServerError);
+                }
+            });
         }
     }
 }
