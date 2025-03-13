@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using TaskApi.Data;
+using TaskApi.Routes;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,7 +18,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+app.TaskRoutes();
 
+app.UseHttpsRedirection();
 app.Run();
 
